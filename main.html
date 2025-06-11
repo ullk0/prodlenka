@@ -283,12 +283,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Color randomization
             const colors = ['EBA649', '00D1D4', '00C95E', 'CF7FDD'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             document.documentElement.style.setProperty('--main-color', '#' + randomColor);
 
-            // Local image array - replace these with your actual image paths
             const images = [
                 './archive/image1.jpg',
                 './archive/image2.jpg',
@@ -302,32 +300,20 @@
                 './archive/image10.jpg',
             ];
 
-            // Get the background container
             const bgContainer = document.querySelector('.background-images');
 
-            // Clear any existing images on page load
             if (bgContainer) {
                 bgContainer.innerHTML = '';
 
-                // Add click handler to the "продлёнка" link
                 document.querySelector('a[href="#default"]').addEventListener('click', function (e) {
-                    // Get a random image
                     const randomImage = images[Math.floor(Math.random() * images.length)];
-
-                    // Create a new image element
                     const imgElement = document.createElement('div');
                     imgElement.className = 'bg-image';
                     imgElement.style.backgroundImage = `url(${randomImage})`;
-
-                    // Generate random size between min and max values
-                    const randomWidth = 25 + Math.floor(Math.random() * 11); // 15-25vw
-                    const randomHeight = 50 + Math.floor(Math.random() * 21); // 30-50vh
-
-                    // Set random dimensions
+                    const randomWidth = 25 + Math.floor(Math.random() * 11);
+                    const randomHeight = 50 + Math.floor(Math.random() * 21);
                     imgElement.style.width = randomWidth + 'vw';
                     imgElement.style.height = randomHeight + 'vh';
-
-                    // Add the image to the container
                     bgContainer.appendChild(imgElement);
                 });
             } else {
