@@ -27,6 +27,12 @@ a {
     text-decoration: none
 }
 
+a {
+    text-decoration: underline;
+    text-decoration-color: var(--main-color);
+    text-decoration-thickness: 3px;
+}
+
 .p--times {
     font-family: "Times";
 }
@@ -91,6 +97,8 @@ a {
 #manifesto:target~.nav .button--manifesto,
 #archive:target~.nav .button--archive {
     text-decoration: underline;
+    text-decoration-color: var(--main-color);
+    text-decoration-thickness: 3px;
 }
 
 .manifesto__image {
@@ -134,11 +142,10 @@ a {
     margin: 0;
 }
 
-.calendar-item--underline:hover {
+.calendar-item--underline {
     text-decoration: underline;
     text-decoration-color: var(--main-color);
     text-decoration-thickness: 3px;
-
     cursor: pointer;
 }
 
@@ -146,6 +153,20 @@ a {
     text-decoration: line-through;
     text-decoration-color: var(--main-color);
     text-decoration-thickness: 24px;
+}
+
+.calendar-item.has-snippet:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--main-color);
+    text-decoration-thickness: 3px;
+    cursor: pointer;
+}
+
+.calendar-item--underline {
+    text-decoration: underline;
+    text-decoration-color: var(--main-color);
+    text-decoration-thickness: 3px;
+    cursor: pointer;
 }
 
 /* BACKGROUND */

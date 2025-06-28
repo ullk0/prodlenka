@@ -15,7 +15,7 @@
 
     <section id="calendar" class="calendar section">
         <div class="calendar-body">
-            <div class="calendar-item calendar-item--underline" id="16-01-2025">
+            <div class="calendar-item" id="16-01-2025">
                 <p>16-01-2025</p>
             </div>
             <div class="calendar-item" id="23-01-2025">
@@ -54,42 +54,43 @@
             <div class="calendar-item" id="10-04-2025">
                 <p>10-04-2025</p>
             </div>
-        </div>
-        <div class="separator"></div>
-        <div class="calendar-body">
             <div class="calendar-item" id="17-04-2025">
                 <p>17-04-2025</p>
             </div>
-            <div class="calendar-item" id="24-04-2025">
+            <div class="calendar-item--strikethrough" id="24-04-2025">
                 <p>24-04-2025</p>
             </div>
-            <div class="calendar-item" id="01-05-2025">
+            <div class="calendar-item--strikethrough" id="01-05-2025">
                 <p>01-05-2025</p>
             </div>
-            <div class="calendar-item" id="08-05-2025">
+            <div class="calendar-item--strikethrough" id="08-05-2025">
                 <p>08-05-2025</p>
             </div>
             <div class="calendar-item" id="15-05-2025">
                 <p>15-05-2025</p>
             </div>
-            <div class="calendar-item" id="22-05-2025">
+            <div class="calendar-item--strikethrough" id="22-05-2025">
                 <p>22-05-2025</p>
             </div>
             <div class="calendar-item" id="29-05-2025">
                 <p>29-05-2025</p>
             </div>
-            <div class="calendar-item" id="05-06-2025">
+            <div class="calendar-item--strikethrough" id="05-06-2025">
                 <p>05-06-2025</p>
             </div>
-            <div class="calendar-item" id="12-06-2025">
+            <div class="calendar-item--strikethrough" id="12-06-2025">
                 <p>12-06-2025</p>
             </div>
-            <div class="calendar-item" id="19-06-2025">
+            <div class="calendar-item--strikethrough" id="19-06-2025">
                 <p>19-06-2025</p>
             </div>
-            <div class="calendar-item" id="26-06-2025">
+            <div class="calendar-item--strikethrough" id="26-06-2025">
                 <p>26-06-2025</p>
             </div>
+        </div>
+        <div class="separator"></div>
+        <div class="calendar-body">
+
             <div class="calendar-item" id="03-07-2025">
                 <p>03-07-2025</p>
             </div>
@@ -376,15 +377,15 @@
 
         function shuffle(array) {
             let currentIndex = array.length;
-
-            while (currentIndex != 0) {
+            while (currentIndex !== 0) {
                 let randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex--;
                 [array[currentIndex], array[randomIndex]] = [
-                    array[randomIndex], array[currentIndex]];
+                    array[randomIndex],
+                    array[currentIndex],
+                ];
             }
         }
-
 
         document.addEventListener('DOMContentLoaded', function () {
             const colors = ['EBA649', '00D1D4', '00C95E', 'CF7FDD'];
@@ -404,34 +405,75 @@
                 './archive/image10.jpg',
                 './archive/image11.jpg',
             ];
-
             shuffle(images);
 
             const bgContainer = document.querySelector('.background-images');
-
-            if (!bgContainer) {
-                return console.error("Background container not found!");
-            }
-
+            if (!bgContainer) return console.error('Background container not found!');
             bgContainer.innerHTML = '';
 
-            document.querySelector('a[href="#default"]').addEventListener('click', function (e) {
-                const currentImage = images[currentIndex];
-                currentIndex++;
-                if (currentIndex == images.length) {
+            document.querySelector('a[href="#default"]').addEventListener('click', function () {
+                const url = images[currentIndex++];
+                if (currentIndex === images.length) {
                     currentIndex = 0;
                     shuffle(images);
                 }
-                const imgElement = document.createElement('div');
-                imgElement.className = 'bg-image';
-                imgElement.style.backgroundImage = `url(${currentImage})`;
-                const randomWidth = 30 + Math.floor(Math.random() * 2);
-                const randomHeight = 60 + Math.floor(Math.random() * 2);
-                imgElement.style.width = randomWidth + 'vw';
-                imgElement.style.height = randomHeight + 'vh';
-                bgContainer.appendChild(imgElement);
+                const div = document.createElement('div');
+                div.className = 'bg-image';
+                div.style.backgroundImage = `url(${url})`;
+                const w = 30 + Math.floor(Math.random() * 2);
+                const h = 60 + Math.floor(Math.random() * 2);
+                div.style.width = w + 'vw';
+                div.style.height = h + 'vh';
+                bgContainer.appendChild(div);
             });
 
+            const calendar = document.getElementById('calendar');
+            const separator = calendar.querySelector('.separator');
+
+            calendar
+                .querySelectorAll('.calendar-item:not(.calendar-item--strikethrough)')
+                .forEach(item => {
+                    const date = item.id;
+
+                    fetch(`./${date}.html`, { method: 'HEAD' })
+                        .then(res => {
+                            if (!res.ok) throw new Error('no snippet');
+                            item.classList.add('has-snippet');
+
+                            item.addEventListener('click', function () {
+                                const snippetId = 'snippet-' + date;
+                                const existing = document.getElementById(snippetId);
+
+                                if (existing) {
+                                    existing.remove();
+                                    item.classList.remove('calendar-item--underline');
+                                } else {
+                                    item.classList.add('calendar-item--underline');
+                                    fetch(`./${date}.html`)
+                                        .then(r => {
+                                            if (!r.ok) throw new Error(r.statusText);
+                                            return r.text();
+                                        })
+                                        .then(html => {
+                                            const wrapper = document.createElement('div');
+                                            wrapper.id = snippetId;
+                                            wrapper.className = 'calendar-snippet';
+                                            wrapper.innerHTML =
+                                                `<div class="separator"></div>` +
+                                                html +
+                                                `<p><i><br>${date}</i></p>`;
+                                            calendar.insertBefore(wrapper, separator);
+                                        })
+                                        .catch(err => {
+                                            console.error('Failed to load snippet for ' + date, err);
+                                            item.classList.remove('calendar-item--underline');
+                                        });
+                                }
+                            });
+                        })
+                        .catch(() => {
+                        });
+                });
         });
     </script>
 </body>
