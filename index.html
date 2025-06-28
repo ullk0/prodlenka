@@ -389,8 +389,13 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const colors = ['EBA649', '00D1D4', '00C95E', 'CF7FDD'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            document.documentElement.style.setProperty('--main-color', '#' + randomColor);
+            const randomColor = colors[
+                Math.floor(Math.random() * colors.length)
+            ];
+            document.documentElement.style.setProperty(
+                '--main-color',
+                '#' + randomColor
+            );
 
             let images = [
                 './archive/image1.jpg',
@@ -408,35 +413,39 @@
             shuffle(images);
 
             const bgContainer = document.querySelector('.background-images');
-            if (!bgContainer) return console.error('Background container not found!');
+            if (!bgContainer) {
+                return console.error('Background container not found!');
+            }
             bgContainer.innerHTML = '';
 
-            document.querySelector('a[href="#default"]').addEventListener('click', function () {
-                const url = images[currentIndex++];
-                if (currentIndex === images.length) {
-                    currentIndex = 0;
-                    shuffle(images);
-                }
-                const div = document.createElement('div');
-                div.className = 'bg-image';
-                div.style.backgroundImage = `url(${url})`;
-                const w = 30 + Math.floor(Math.random() * 2);
-                const h = 60 + Math.floor(Math.random() * 2);
-                div.style.width = w + 'vw';
-                div.style.height = h + 'vh';
-                bgContainer.appendChild(div);
-            });
+            document
+                .querySelector('a[href="#default"]')
+                .addEventListener('click', function () {
+                    const url = images[currentIndex++];
+                    if (currentIndex === images.length) {
+                        currentIndex = 0;
+                        shuffle(images);
+                    }
+                    const div = document.createElement('div');
+                    div.className = 'bg-image';
+                    div.style.backgroundImage = `url(${url})`;
+                    const w = 30 + Math.floor(Math.random() * 2);
+                    const h = 60 + Math.floor(Math.random() * 2);
+                    div.style.width = w + 'vw';
+                    div.style.height = h + 'vh';
+                    bgContainer.appendChild(div);
+                });
 
             const calendar = document.getElementById('calendar');
             const separator = calendar.querySelector('.separator');
 
             calendar
                 .querySelectorAll('.calendar-item:not(.calendar-item--strikethrough)')
-                .forEach(item => {
+                .forEach(function (item) {
                     const date = item.id;
 
-                    fetch(`./${date}.html`, { method: 'HEAD' })
-                        .then(res => {
+                    fetch(`./${date}.html`)
+                        .then(function (res) {
                             if (!res.ok) throw new Error('no snippet');
                             item.classList.add('has-snippet');
 
@@ -450,28 +459,33 @@
                                 } else {
                                     item.classList.add('calendar-item--underline');
                                     fetch(`./${date}.html`)
-                                        .then(r => {
+                                        .then(function (r) {
                                             if (!r.ok) throw new Error(r.statusText);
                                             return r.text();
                                         })
-                                        .then(html => {
+                                        .then(function (html) {
                                             const wrapper = document.createElement('div');
                                             wrapper.id = snippetId;
                                             wrapper.className = 'calendar-snippet';
                                             wrapper.innerHTML =
-                                                `<div class="separator"></div>` +
+                                                '<div class="separator"></div>' +
                                                 html +
                                                 `<p><i><br>${date}</i></p>`;
                                             calendar.insertBefore(wrapper, separator);
                                         })
-                                        .catch(err => {
-                                            console.error('Failed to load snippet for ' + date, err);
-                                            item.classList.remove('calendar-item--underline');
+                                        .catch(function (err) {
+                                            console.error(
+                                                'Failed to load snippet for ' + date,
+                                                err
+                                            );
+                                            item.classList.remove(
+                                                'calendar-item--underline'
+                                            );
                                         });
                                 }
                             });
                         })
-                        .catch(() => {
+                        .catch(function () {
                         });
                 });
         });
