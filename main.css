@@ -103,10 +103,7 @@ a:hover {
 
 .manifesto__image {
     width: 100%;
-
-    /* mix-blend-mode: multiply; */
     filter: grayscale(100%);
-
     transition: 0.2s;
 }
 
@@ -129,13 +126,12 @@ a:hover {
 
 .calendar-body {
     display: flex;
-    align-items: flex-start;
-    align-content: flex-start;
     flex-wrap: wrap;
     box-sizing: border-box;
 
     gap: 30px;
 }
+
 
 .calendar-item {
     flex-shrink: 0;
@@ -186,7 +182,6 @@ a:hover {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    filter: grayscale(100%);
 
     top: 50%;
     left: 50%;
